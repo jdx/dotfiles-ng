@@ -1,0 +1,127 @@
+# vim: filetype=gitconfig:noexpandtab:sts=0:ts=2
+[core]
+        excludesfile = ~/.gitignore
+        autocrlf = input
+[alias]
+        a        = add
+        ai       = add --interactive
+        br       = branch
+        recent   = for-each-ref --sort=committerdate refs/heads/ --format='%(authordate:short) %(color:red)%(objectname:short) %(color:yellow)%(refname:short)%(color:reset) (%(color:green)%(committerdate:relative)%(color:reset))'
+        re       = "!git recent --contains=\"$(git mainbranch)@{2 weeks ago}\""
+        rec      = "!git checkout $(git re --color | fzf --ansi --disabled --tac | awk '{print $3}')"
+        rea      = recent
+        ci       = commit
+        cip      = !git ci && git push
+        cm       = commit -m
+        ca       = commit --amend --no-edit
+        co       = checkout
+        cp       = cherry-pick
+        com      = "!git co $(git mainbranch)"
+        last     = log -1 HEAD
+        d        = diff
+        dc       = diff --cached
+        dt       = difftool
+        dtc      = difftool --cached
+        f        = fetch
+        l        = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+        lp       = log -p --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+        p        = add --patch
+        pl       = pull
+        plr      = pull --rebase
+        ps       = push
+        unstage  = reset HEAD --
+        r        = reset
+        rb       = rebase
+        rba      = rebase --abort
+        rbc      = rebase --continue
+        rbi      = rebase -i
+        rbim     = "!git rebase -i origin/$(git mainbranch)"
+        rbs      = rebase --skip
+        st       = status -s
+        stl      = status
+        ss       = show --stat --oneline
+        sw       = switch
+        wip      = "!git plr && git p && git ci -m wip && git push"
+        squash-all = "!f(){ git reset $(git commit-tree HEAD^{tree} -m \"${1:-init}\");};f"
+        sync     = !git pull && git push
+        tagchron = for-each-ref --sort=taggerdate --format '%(tag)'
+        subup    = submodule update --init --recursive
+        mainbranch = "!git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
+        synced = "!git pull origin $(git mainbranch) --rebase"
+        update = "!git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase"
+        squash = "!git rebase -v -i $(git mainbranch)"
+        publish = push origin HEAD --force-with-lease
+        pub = publish
+        cleanup = "!git branch --merged | grep  -v '\\*\\|$(git mainbranch)' | xargs -n 1 -r git branch -d"
+[user]
+        name = jdx
+        email = 216188+jdx@users.noreply.github.com
+        useconfigonly = true
+        signingKey = 69FC99ECD693AA677F3B4CF0584DADE86724B407
+        ; signingkey = ~/.ssh/id_ed25519.pub
+[help]
+        autocorrect = 30
+[color]
+        ui = true
+[fetch]
+        prune = true
+        recurseSubmodules = on-demand
+[push]
+        default = current
+        #followTags = true
+        autoSetupRemote = true
+[submodule]
+        fetchJobs = 8
+        recurse = true
+[rebase]
+        autoStash = true
+        autosquash = true
+[filter "lfs"]
+        process = git-lfs filter-process
+        required = true
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+[init]
+        defaultBranch = main
+[protocol]
+        version = 2
+[pull]
+        rebase = true
+[commit]
+        verbose = true
+        gpgsign = true
+[advice]
+        skippedCherryPicks = false
+[apply]
+        ignoreWhitespace = change
+[branch]
+        autosetuprebase = always
+        autosetupmerge = true
+[index]
+        threads = true
+[hub]
+        protocol = ssh
+[gpg]
+        ;format = ssh
+[include]
+        path = ~/.gitconfig.delta
+        path = ~/.gitconfig.local
+[includeIf "gitdir:/Volumes/workplace/"]
+        path = ~/workplace/.gitconfig
+[includeIf "gitdir:~/workplace/"]
+        path = ~/workplace/.gitconfig
+[includeIf "gitdir:/workplace/jdx/"]
+        path = ~/workplace/.gitconfig
+[includeIf "gitdir:/home/jdx/workplace/"]
+        path = ~/workplace/.gitconfig
+[safe]
+        directory = /Users/jdx/actions-runner/_work/mise/mise
+        directory = /Users/jdx/actions-runner/_work/mise/mise
+[stash]
+        showPatch = true
+[credential "https://github.com"]
+        helper =
+        helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+        helper =
+        helper = !/opt/homebrew/bin/gh auth git-credential
